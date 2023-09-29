@@ -1,13 +1,92 @@
 import { works } from "./loadWorks.js";
 
-export const deleteWorks = async() =>{
-    try{
+const API_URL = "http://localhost:5678/api/works/";
+
+const showModal = (modalId) => {
+    document.getElementById(modalId).style.display = 'block';
+    document.body.style.overflow = 'hidden';
+};
+
+const hideModal = (modalId) => {
+    document.getElementById(modalId).style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+async function deleteProject(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Récupérer l'élément figure de l'élément cliqué
+    const figureElement = event.target.closest('figure');
+    if (!figureElement) {
+        console.error("Élément figure non trouvé");
+        return;
+    }
+    
+    // Récupérer l'id du projet à partir de l'élément figure
+    const projectId = figureElement.getAttribute('data-id');
+    if (!projectId) {
+        console.error("ID du projet non trouvé");
+        return;
+    }
+    
+    // Récupérer le token d'authentification
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+        console.error("Token d'authentification non trouvé");
+        return;
+    }
+    
+    // Essayer de supprimer le projet via l'API
+    try {
+        const response = await fetch(`http://localhost:5678/api/works/${projectId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Erreur lors de la suppression du projet ID ${projectId}`);
+        }
+        
+        console.log(`Projet ID ${projectId} supprimé avec succès de l'API.`);
+        
+    } catch (error) {
+        console.error("Erreur lors de la suppression du projet via l'API:", error);
+        return;
+    }
+    
+    // Supprimer le projet de la modale de suppression
+    figureElement.remove();
+    console.log(`Projet ID ${projectId} supprimé de la modale de suppression`);
+    
+    // Supprimer également le projet de la galerie principale sur index.html
+    const mainGallery = document.getElementById('gallery');
+    if (!mainGallery) {
+        console.error("Élément #gallery non trouvé");
+        return;
+    }
+    
+    const projectInGallery = mainGallery.querySelector(`figure[data-id='${projectId}']`);
+    if (!projectInGallery) {
+        console.error(`Projet ID ${projectId} non trouvé dans #gallery`);
+        return;
+    }
+    
+    projectInGallery.remove();
+    console.log(`Projet ID ${projectId} supprimé de #gallery`);
+}
+
+
+
+export const deleteWorks = async () => {
+    try {
         const galleryDiv = document.getElementById("gallery-remove");
         
         works.forEach(imageData => {
             const figure = document.createElement("figure");
             figure.setAttribute("data-id", imageData.id);
-            console.log("ID du projet:", imageData.id);
             
             const img = document.createElement("img");
             img.src = imageData.imageUrl;
@@ -25,113 +104,54 @@ export const deleteWorks = async() =>{
             deleteButton.appendChild(trashIcon);
             figure.appendChild(deleteButton);
             galleryDiv.appendChild(figure);
-            console.log('Bouton de suppression généré pour une image.');
         });
-    }catch(error) {
+
+        galleryDiv.addEventListener('click', (event) => {
+            if (event.target.classList.contains('btn-delete') || event.target.parentNode.classList.contains('btn-delete')) {
+                deleteProject(event);
+            }
+        });
+    } catch (error) {
         console.error("Erreur lors de la récupération des images de projets dans la modale de suppression:", error);
-    };
-    
-    // Fonction pour supprimer un projet.
-    function deleteProject(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        
-        const figureElement = event.target.closest('figure');
-        const projectId = figureElement.getAttribute('data-id');
-        const authToken = localStorage.getItem('authToken');
-        console.log("Bouton de suppression cliqué");
-        
-        fetch(`http://localhost:5678/api/works/${projectId}`, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `Bearer ${authToken}`
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            figureElement.remove();
-            console.log(`Projet ID ${projectId} supprimé avec succès.`);
-        } else {
-            throw new Error(`Erreur lors de la suppression du projet ID ${projectId}`);
-        }
-    })
-    .catch(error => {
-        console.error("Erreur lors de la suppression du projet:", error);
-    });
-}
-
-// Écouteur d'événements pour la suppression d'un projet.
-document.getElementById('gallery-remove').addEventListener('click', function(event) {
-    if (event.target.classList.contains('btn-delete') || event.target.parentNode.classList.contains('btn-delete')) {
-        deleteProject(event);
+        // Affichez un message d'erreur à l'utilisateur ici, si nécessaire
     }
-});
-
 };
 
-// Modal d'édition ci-dessous
 document.addEventListener('DOMContentLoaded', () => {
-    // Sélectionnez l'élément avec l'id "edit"
     const editButton = document.getElementById('edit');
-    
-    // Sélectionnez la modal
     const modalEdit = document.getElementById('modal-edit');
     
-    // Fonction pour afficher la modal
-    function showModalEdit() {
-        modalEdit.style.display = 'block';
-        document.body.style.overflow = 'hidden'; // Empêche le défilement de la page sous la modal
-    }
-    
-    // Fonction pour masquer la modal
-    function hideModalEdit() {
-        modalEdit.style.display = 'none';
-        document.body.style.overflow = 'auto'; // Réactive le défilement de la page
-    }
-    
-    // Gérez l'ouverture de la modal lors du clic sur le bouton "Edit"
     if (editButton && modalEdit) {
         editButton.addEventListener('click', () => {
-            showModalEdit();
+            showModal('modal-edit');
+        });
+
+        document.getElementById('modal-close-edit').addEventListener('click', () => {
+            hideModal('modal-edit');
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modalEdit) {
+                hideModal('modal-edit');
+            }
         });
     }
-    
-    // Gérez la fermeture de la modal lorsque la croix est cliquée
-    const closeButtonEdit = document.getElementById('modal-close-edit');
-    if (closeButtonEdit) {
-        closeButtonEdit.addEventListener('click', () => {
-            hideModalEdit();
+
+    const btnAddProjects = document.getElementById('btn-addProjects');
+    if (btnAddProjects) {
+        btnAddProjects.addEventListener('click', () => {
+            hideModal('modal-edit');
+            showModal('modal-add-photo');
         });
     }
-    
-    // Gérez la fermeture de la modal lorsque l'utilisateur clique en dehors de la modal
-    window.addEventListener('click', (event) => {
-        if (modalEdit && event.target === modalEdit) {
-            hideModalEdit();
-        }
+
+    document.getElementById('modal-close-add-photo').addEventListener('click', () => {
+        hideModal('modal-add-photo');
     });
-    // Fonction pour afficher la modale d'ajout de photo
-    function showModalAddPhoto() {
-        hideModalEdit(); // masquez la modale d'édition pour éviter la superposition
-        document.getElementById('modal-add-photo').style.display = 'block';
-        document.body.style.overflow = 'hidden'; // Empêche le défilement de la page sous la modal
-    }
-    
-    // Fonction pour masquer la modale d'ajout de photo
-    function hideModalAddPhoto() {
-        document.getElementById('modal-add-photo').style.display = 'none';
-        document.body.style.overflow = 'auto'; // Réactive le défilement de la page
-    }
-    document.getElementById('btn-addProjects').addEventListener('click', function() {
-        showModalAddPhoto();
-    });    
-    document.getElementById('modal-close-add-photo').addEventListener('click', function() {
-        hideModalAddPhoto();
-    });
+
     window.addEventListener('click', (event) => {
         if (event.target === document.getElementById('modal-add-photo')) {
-            hideModalAddPhoto();
+            hideModal('modal-add-photo');
         }
     });
-    
 });

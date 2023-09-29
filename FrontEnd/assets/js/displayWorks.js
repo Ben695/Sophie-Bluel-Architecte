@@ -30,6 +30,7 @@ export const displayWorks = () =>{
             galleryDiv.innerHTML = ""; // Effacement du contenu actuel de la galerie
             
             // Parcours des données pour afficher les œuvres en fonction de la catégorie sélectionnée
+            // Parcours des données pour afficher les œuvres en fonction de la catégorie sélectionnée
             works.forEach(item => {
                 if (filterCategory === "Tous" || item.category.name === filterCategory) {
                     // Création des éléments HTML pour chaque œuvre
@@ -42,12 +43,16 @@ export const displayWorks = () =>{
                     img.alt = item.title;
                     figcaption.textContent = item.title;
                     
+                    // Ajout de l'attribut data-id à l'élément figure
+                    figure.setAttribute("data-id", item.id);
+                    
                     // Ajout des éléments à la structure HTML
                     figure.appendChild(img);
                     figure.appendChild(figcaption);
                     galleryDiv.appendChild(figure);
                 }
             });
+            
             
             // Gestion de la classe "active" pour les boutons de filtre
             filterButtons.forEach(btn => btn.classList.remove("active"));
