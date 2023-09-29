@@ -1,13 +1,15 @@
-export const connexion = () =>{
+// Déclaration d'une fonction nommée "connexion"
+export const connexion = () => {
     
-    // Vérifiez si l'utilisateur est connecté
+    // Récupération du token d'authentification et du statut de connexion depuis le localStorage
     const authToken = localStorage.getItem('authToken');
     const isLoggedIn = localStorage.getItem('isLoggedIn');
 
+    // Récupération des éléments boutons "Logout" et "Login" depuis le DOM
     const logoutButton = document.getElementById('logout-menu');
     const loginButton = document.getElementById('login-menu');
 
-    // Fonction pour afficher le bouton "Login" et masquer le bouton "Logout"
+    // Déclaration d'une fonction pour afficher le bouton "Login" et masquer le bouton "Logout"
     function showLoginButton() {
         if (loginButton) {
             loginButton.style.display = 'block';
@@ -17,7 +19,7 @@ export const connexion = () =>{
         }
     }
 
-    // Fonction pour afficher le bouton "Logout" et masquer le bouton "Login"
+    // Déclaration d'une fonction pour afficher le bouton "Logout" et masquer le bouton "Login"
     function showLogoutButton() {
         if (loginButton) {
             loginButton.style.display = 'none';
@@ -27,7 +29,7 @@ export const connexion = () =>{
         }
     }
 
-    // Si l'utilisateur est connecté, affichez le bouton "Logout" et la section "edit"
+    // Si l'utilisateur est connecté, affiche le bouton "Logout" et la section "edit"
     if (authToken && isLoggedIn === 'true') {
         showLogoutButton();
         const editSection = document.getElementById('edit-mode');
@@ -39,7 +41,7 @@ export const connexion = () =>{
             editProjects.style.display = 'flex';
         }
     } else {
-        // Sinon, affichez le bouton "Login" et masquez la section "edit"
+        // Si l'utilisateur n'est pas connecté, affiche le bouton "Login" et masque la section "edit"
         showLoginButton();
         const editSection = document.getElementById('edit-mode');
         const editProjects = document.getElementById('edit');
@@ -51,20 +53,21 @@ export const connexion = () =>{
         }
     }
 
-    // Gérez la déconnexion de l'utilisateur lorsque le bouton "Logout" est cliqué
+    // Ajout d'un écouteur d'événements pour gérer la déconnexion de l'utilisateur
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
-            // Supprimez les informations d'authentification
+            // Suppression des informations d'authentification du localStorage
             localStorage.removeItem('authToken');
             localStorage.removeItem('isLoggedIn');
 
-            // Redirigez l'utilisateur vers la page de connexion
+            // Redirection de l'utilisateur vers la page de connexion
             window.location.href = 'login.html';
         });
     }
 
-    // Vérifiez si nous sommes sur la page "login.html" et ajoutez des gestionnaires spécifiques si nécessaire
+    // Vérification si nous sommes sur la page "login.html" pour ajouter des gestionnaires spécifiques
     if (window.location.pathname.endsWith('login.html')) {
+        // Récupération des éléments du formulaire de connexion et de la modal d'erreur
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const errorMessage = document.querySelector('.error-message');
@@ -72,7 +75,7 @@ export const connexion = () =>{
         const closeButton = document.querySelector('.modal-close');
         const modalConnexion = document.getElementById('modal-connexion');
 
-        // Fonction pour afficher la modal d'erreur
+        // Déclaration d'une fonction pour afficher la modal d'erreur
         function showErrorModal(message) {
             errorMessage.textContent = message;
             if (modalConnexion) {
@@ -80,34 +83,37 @@ export const connexion = () =>{
             }
         }
 
-        // Fonction pour masquer la modal d'erreur
+        // Déclaration d'une fonction pour masquer la modal d'erreur
         function hideErrorModal() {
             if (modalConnexion) {
                 modalConnexion.style.display = 'none';
             }
         }
 
-        // Fonction pour effacer le champ de mot de passe
+        // Déclaration d'une fonction pour effacer le champ de mot de passe
         function clearPasswordInput() {
             if (passwordInput) {
                 passwordInput.value = '';
             }
         }
 
-        // Ajoutez un écouteur d'événements sur le champ de l'e-mail pour vérifier le format lorsque l'utilisateur quitte le champ
+        // Ajout d'un écouteur d'événements pour vérifier le format de l'email
         if (emailInput) {
             emailInput.addEventListener('blur', () => {
                 const email = emailInput.value;
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+/;
 
+                // Si l'email est invalide, affiche la modal d'erreur
                 if (!emailRegex.test(email)) {
                     showErrorModal('Adresse e-mail invalide. Veuillez saisir une adresse e-mail valide.');
                 } else {
+                    // Sinon, masque la modal d'erreur
                     hideErrorModal();
                 }
             });
         }
 
+        // Récupération du bouton de connexion et ajout d'un écouteur d'événements
         const connexionButton = document.getElementById('connexion');
         if (connexionButton) {
             connexionButton.addEventListener('click', async () => {
@@ -115,6 +121,7 @@ export const connexion = () =>{
                 const password = passwordInput.value;
 
                 try {
+                    // Tentative de connexion en envoyant une requête POST au serveur
                     const response = await fetch(authUrl, {
                         method: 'POST',
                         headers: {
@@ -126,16 +133,19 @@ export const connexion = () =>{
                         })
                     });
 
+                    // Si la connexion est réussie, stocke le token et redirige l'utilisateur
                     if (response.ok) {
                         const data = await response.json();
                         localStorage.setItem('authToken', data.token);
                         localStorage.setItem('isLoggedIn', 'true');
                         window.location.href = 'index.html';
                     } else {
+                        // Si les identifiants sont incorrects, affiche une erreur et efface le mot de passe
                         showErrorModal('Identifiants incorrects');
                         clearPasswordInput(); 
                     }
                 } catch (error) {
+                    // En cas d'erreur réseau ou de serveur, affiche une erreur
                     console.error('Une erreur s\'est produite :', error);
                     showErrorModal('Une erreur s\'est produite. Veuillez réessayer.');
                     clearPasswordInput(); 
@@ -143,14 +153,13 @@ export const connexion = () =>{
             });
         }
 
-        // Ajouter un écouteur d'événements pour fermer la modal d'erreur lorsque le bouton de fermeture est cliqué
+        // Ajout d'écouteurs d'événements pour fermer la modal d'erreur
         if (closeButton) {
             closeButton.addEventListener('click', () => {
                 hideErrorModal();
             });
         }
 
-        // Ajouter un écouteur d'événements pour fermer la modal d'erreur lorsque l'utilisateur clique en dehors de la modal
         window.addEventListener('click', (event) => {
             if (modalConnexion && event.target === modalConnexion) {
                 hideErrorModal();
