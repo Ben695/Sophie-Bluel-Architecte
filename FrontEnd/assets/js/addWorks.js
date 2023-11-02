@@ -1,19 +1,13 @@
-// Importation de la fonction addWorks
 export const addWorks = async () => {
-    // Sélection des éléments du DOM nécessaires
-    let titrePhotos = document.getElementById("titrePhotos"); // Input pour le titre des photos
-    let optionsList = document.getElementById("optionsList"); // Liste déroulante des options
-    let validAddPhotos = document.getElementById("valid-addPhotos"); // Bouton pour valider l'ajout des photos
-    
-    // Sélection d'autres éléments et de leurs enfants
+    let titrePhotos = document.getElementById("titrePhotos"); 
+    let optionsList = document.getElementById("optionsList"); 
+    let validAddPhotos = document.getElementById("valid-addPhotos");
     let addPhotosElement = document.getElementById("addPhotos");
     let addPhotosButton = addPhotosElement.querySelector(".btn-addPhotos");
     let txtAddPhotos = addPhotosElement.querySelector(".txt-addPhotos");
     
-    // Fonction pour vérifier si le formulaire est complet
     function checkFormCompletion() {
         console.log("Vérification de la complétion du formulaire...");
-        // Log des valeurs actuelles du formulaire
         console.log("Valeur du titre:", titrePhotos.value.trim());
         console.log("Option sélectionnée:", getSelectedOption());
         
@@ -80,7 +74,7 @@ export const addWorks = async () => {
     // Fonction asynchrone pour charger les catégories depuis l'API et les ajouter à la liste d'options
     async function loadCategoriesFromAPI() {
         console.log("Loading categories from API...");
-        const url = "http://localhost:5678/api/categories";
+        const url = import.meta.env.VITE_APP_BACK_URL+"/categories";
         try {
             const response = await fetch(url);
             if (!response.ok) {
@@ -114,7 +108,6 @@ export const addWorks = async () => {
         }
     }
 
-    // Sélection des éléments pour afficher les messages de succès et d'erreur
     let validWorkElement = document.querySelector(".valid-work");
     let errorWorkElement = document.querySelector(".error-work");
 
@@ -136,7 +129,7 @@ export const addWorks = async () => {
     // Fonction asynchrone pour ajouter une œuvre à l'API
     async function addWorkToAPI(title, imageFile, categoryId) {
         console.log("Début de la fonction addWorkToAPI");
-        const url = "http://localhost:5678/api/works";
+        const url = import.meta.env.VITE_APP_BACK_URL+"/works";
         const authToken = localStorage.getItem('authToken');
 
         // Création du FormData avec les informations de l'œuvre
@@ -199,35 +192,39 @@ export const addWorks = async () => {
     await loadCategoriesFromAPI();
     
     // Écouteur d'événements pour la prévisualisation de l'image sélectionnée
-    document.getElementById('btn-addProjects').addEventListener('click', function() {
-        const imageInput = document.getElementById('imageInput');
-        if (imageInput) {
-            imageInput.addEventListener('change', function (event) {
-                const file = event.target.files[0];
+document.getElementById('btn-addProjects').addEventListener('click', function() {
+    const imageInput = document.getElementById('imageInput');
+    if (imageInput) {
+        imageInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
                 
-                if (file) {
-                    const reader = new FileReader();
+                reader.onload = function (e) {
+                    // Masquer le bouton et le texte d'ajout de photos
+                    addPhotosButton.style.zIndex = "-1";
+                    txtAddPhotos.style.zIndex = "-1";
                     
-                    reader.onload = function (e) {
-                        // Masquer le bouton et le texte d'ajout de photos
-                        addPhotosButton.style.zIndex = "-1";
-                        txtAddPhotos.style.zIndex = "-1";
-                        
-                        // Afficher l'image sélectionnée
-                        const img = new Image();
-                        img.src = e.target.result;
-                        img.style.zIndex = "1";
-                        addPhotosElement.appendChild(img);
-                    }
+                    // Afficher l'image sélectionnée
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.style.zIndex = "1";
+                    addPhotosElement.appendChild(img);
                     
-                    // Lecture de l'image sélectionnée en tant que DataURL
-                    reader.readAsDataURL(file);
+                    // Désactiver l'input pour empêcher l'ajout d'une autre image
+                    imageInput.setAttribute("disabled", true);
                 }
-            });
-        } else {
-            console.error("Element #imageInput not found");
-        }
-    });
+                
+                // Lecture de l'image sélectionnée en tant que DataURL
+                reader.readAsDataURL(file);
+            }
+        });
+    } else {
+        console.error("Element #imageInput not found");
+    }
+});
+
     
     // Écouteur d'événements pour le bouton de validation d'ajout de photos
     validAddPhotos.addEventListener("click", async () => {

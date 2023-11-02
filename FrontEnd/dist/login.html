@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sophie Bluel - Architecte d'intérieur - Page login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="description" content="" />
+    
+    
+    <script type="module" crossorigin src="/assets/script-080f2b0d.js"></script>
+    <link rel="stylesheet" href="/assets/script-91a42c1a.css">
+  </head>
+  <body>
+    <header>
+      <a class="logo-txt" href="index.html">
+        <h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
+      </a>
+      <nav>
+        <ul>
+          <a href="index.html#portfolio"><li>projets</li></a>
+          <a href="index.html#contact"><li>contact</li></a>
+          <a href="login.html">
+            <li id="login-menu" class="connexion-menu">login</li>
+          </a>
+          <a>
+            <li id="logout-menu" class="connexion-menu" style="display: none">
+              Logout
+            </li>
+          </a>
+          <li><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAACmElEQVR4Xt2YjZHTMBCFHx1AB6ID6EAd3HWQpQLoICqBDpJKziXQAVcCHQB+kfbklX8iy3HC8M3sJN7Vz9uVpegOqON9b596kxuZRxxzExzga29db392sq63Axrwvb3CDvQd40q0GJMOsIlzrmdUckTuGHCDpVjA9XZGno9zL6LimBHfuXvhkFdsViRLrOKcDd0FhyzSm0hCg67w3xOumhbJvFqSAqehc0c4OVfMFX4SELV8Gzq75HRD547oao0qlZ4Zo6Zpx87oMqo92fAFLdhFvE8PIcdXwUEE8Zw8JeN3LmFZHeUHljck+zPOZN7eP7PmFXDyY2+/YCtSGgW72MXAyecSEMS+/LQPlXBwZs9+FBgQV8Il43f+Ymgbfl6qUYlgg0BOpFULNjRJQE6kVqSgUaBDroqYyDKCXMm5ZR0iaBR4Rn3lSgLq+woaBDJzrUIrXGbatSoKGgTy2GC7tbt9SEDdXIIGgXo2+cK/Bo84BsdaQtAg8IzYzln3KhziGKfCXyL4HwX+80ssiO2Cda+CG4xjTF0QhggaBPJo0GOilVfEuXY5ZkhAexWPqHv/iKBRIDPXKhyK2BJsyz7s62xoEkGjQDK8LLAq19DKsY+zoVkEGwQSB3uV4tXKJz+N3ylME2Gb2psMEWwUSBzsH91TpnfFa5uiRHe78IGZ8eHa2TQHJ3/G+MovKdZCQNTk+cBB+NDl+MOhFmp6S3DkeCAOEwXTNQ9D54M4I2o5DJ3D823Nbrs1HxE1/CwDxCMGKdSZyH2gOC0SN90kAY8R+RlZXLChMQGxIe2EfYS+S/YBeb7f6XsVLLFmROsQO/MXQ1balwnjOckxVRjfOY8GBNv+ic7Jl+wFMenNxxsH8BhXp9V4UlSJ+gvMUU3GuCYGbQAAAABJRU5ErkJggg==" alt="Instagram" /></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <div id="modal-connexion" class="modal">
+        <div class="modal-content">
+          <span class="modal-close">&times;</span>
+          <p class="error-message"></p>
+          <p class="error-mail"></p>
+        </div>
+      </div>
+      <section class="login">
+        <h1>Log In</h1>
+        <div class="email-container">
+          <label for="name" class="input-label">E-mail</label>
+          <input type="text" id="email" class="custom-input" />
+        </div>
+        <div class="password-container">
+          <label for="password" class="input-label mdp">Mot de passe</label>
+          <input type="password" id="password" class="custom-input" />
+        </div>
+        <button id="connexion" class="connexion">Se connecter</button>
+        <p class="lost-pass">Mot de passe oublié</p>
+      </section>
+    </main>
+    <footer>
+      <nav>
+        <ul>
+          <a href="mentions-legales.html"><li>Mentions Légales</li></a>
+        </ul>
+      </nav>
+    </footer>
+  </body>
+</html>

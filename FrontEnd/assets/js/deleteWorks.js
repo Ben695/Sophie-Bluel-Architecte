@@ -1,8 +1,6 @@
-// Importation de l'objet "works" depuis le fichier "loadWorks.js"
 import { works } from "./loadWorks.js";
 
-// Définition de l'URL de base de l'API
-const API_URL = "http://localhost:5678/api/works/";
+const API_URL = import.meta.env.VITE_APP_BACK_URL+"/works/";
 
 // Fonction pour afficher une modale
 const showModal = (modalId) => {
@@ -20,7 +18,6 @@ const hideModal = (modalId) => {
     document.body.style.overflow = 'auto';
 };
 
-// Fonction asynchrone pour supprimer un projet
 async function deleteProject(event) {
     // Prévention du comportement par défaut du clic
     event.preventDefault();

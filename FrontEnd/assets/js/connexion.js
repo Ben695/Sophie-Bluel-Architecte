@@ -1,11 +1,7 @@
-// Déclaration d'une fonction nommée "connexion"
 export const connexion = () => {
-    
-    // Récupération du token d'authentification et du statut de connexion depuis le localStorage
+
     const authToken = localStorage.getItem('authToken');
     const isLoggedIn = localStorage.getItem('isLoggedIn');
-
-    // Récupération des éléments boutons "Logout" et "Login" depuis le DOM
     const logoutButton = document.getElementById('logout-menu');
     const loginButton = document.getElementById('login-menu');
 
@@ -71,7 +67,7 @@ export const connexion = () => {
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const errorMessage = document.querySelector('.error-message');
-        const authUrl = 'http://localhost:5678/api/users/login';
+        const authUrl = import.meta.env.VITE_APP_BACK_URL+'/users/login';
         const closeButton = document.querySelector('.modal-close');
         const modalConnexion = document.getElementById('modal-connexion');
 

@@ -3,8 +3,7 @@
 export let works = [];
 
 export const loadWorkandFilter = async() =>{
-    // On définit l'URL de l'API à partir de laquelle on souhaite récupérer des données.
-    const url = "http://localhost:5678/api/works";
+    const url = import.meta.env.VITE_APP_BACK_URL+"/works";
     
     try{
         // On utilise la fonction fetch pour envoyer une requête HTTP GET à l'URL spécifiée.
