@@ -26,7 +26,7 @@ Pour lancer le projet localement sur votre machine, suivez ces étapes :
 1. **Cloner le dépôt** :
 
 ```bash
-git clone URL_DU_REPO
+git clone https://github.com/Ben695/Sophie-Bluel-Architecte.git
 ```
 
 2. **Installer les dépendances** :
